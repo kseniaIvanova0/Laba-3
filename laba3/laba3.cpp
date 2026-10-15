@@ -1,9 +1,8 @@
-﻿/*****************************
- * Lab 3: Loops and Branches *
- * Author: Ivanova           *
- * Group: PI-261	     *
- * Variant: 7		     *
- *****************************/
+﻿/**************************
+ * Author: Ivanova Ksenia *
+ * Variant: 7             *
+ * Name: Laba 2           *
+ **************************/
 
 #include <iostream>
 #include <cmath>
@@ -12,50 +11,47 @@
 using namespace std;
 
 int main() {
-  // Input data
-  double gravity = 9.81;
-  double pipeDiameter = 0.191;
-  double froudeThreshold = 50.0;
-  double coefficientLow = 0.05;
-  double exponentLow = 0.2;
-  double coefficientHigh = 0.35;
-  double exponentHigh = 0.1;
+  const double g = 9.81;   // Gravity acceleration (m/s^2)
+  double d;                // Pipe diameter (m)
+  double v;                // Velocity (m/s)
+  double Fr;               // Froude number
+  double phi;              // Gas saturation coefficient
 
-  double velocityValues[] = { 1.0, 2.0, 5.0, 10.0, 20.0, 50.0 };
-  int velocityCount = sizeof(velocityValues) / sizeof(velocityValues[0]);
+  double frThreshold = 50.0;// Froude number threshold for formula selection
 
-  // Variables for calculation
-  double velocity;
-  double froudeNumber;
-  double phiValue;
+  double coeffLow = 0.05;   // Coefficient for Fr < 50
+  double expLow = 0.2;      // Exponent for Fr < 50
+  double coeffHigh = 0.35;  // Coefficient for Fr >= 50
+  double expHigh = 0.1;     // Exponent for Fr >= 50
+  int precisionValue = 4;   // Number of decimal places for output
+  int velocityCount = 6;    // Number of velocities to process (from task)
 
-  // Output header
+  cout << "Enter pipe diameter d (m): ";
+  cin >> d;
+
   cout << "----------------------------------------\n";
   cout << "  v (m/s)         Fr            phi\n";
   cout << "----------------------------------------\n";
+  cout << fixed << setprecision(precisionValue);
 
-  // Processing loop
-  cout << fixed << setprecision(4);
-  for (int velocityIndex = 0; velocityIndex < velocityCount; ++velocityIndex) {
-      velocity = velocityValues[velocityIndex];
+  for (int stepIndex = 0; stepIndex < velocityCount; ++stepIndex) {
+      cout << "Enter velocity v (m/s): ";
+      cin >> v;
 
-      // Calculate Froude number
-      froudeNumber = (velocity * velocity) / (gravity * pipeDiameter);
+      Fr = (v * v) / (g * d);
 
-      // Select formula based on Froude number
-      if (froudeNumber < froudeThreshold) {
-          phiValue = coefficientLow * pow(froudeNumber, exponentLow);
+      if (Fr < frThreshold) {
+          phi = coeffLow * pow(Fr, expLow);
       }
       else {
-          phiValue = coefficientHigh * pow(froudeNumber, exponentHigh);
+          phi = coeffHigh * pow(Fr, expHigh);
       }
 
-      // Output results
-      cout << setw(10) << velocity
-          << setw(15) << froudeNumber
-          << setw(15) << phiValue << "\n";
+      cout << setw(10) << v
+           << setw(15) << Fr
+           << setw(15) << phi << "\n";
   }
-
+  
   cout << "----------------------------------------\n";
 
   return 0;
